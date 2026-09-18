@@ -63,16 +63,25 @@ docker --version
 
 ## Passo 4: Enviar o Projeto para a EC2 e Rodar o Contêiner
 
-Existem duas formas fáceis de rodar:
+### Opção A: Clonar diretamente do GitHub na EC2 (Mais Fácil e Rápido)
 
-### Opção A: Copiar os arquivos diretamente da sua máquina para a EC2 (Recomendada)
-
-No seu computador local (fora da EC2), execute dentro da pasta `Avaliação 04/domino-online`:
+Dentro da instância EC2 conectada via SSH:
 
 ```bash
-# Enviar os arquivos via rsync ou scp para a instância
-rsync -avz --exclude 'node_modules' --exclude 'dist' -e "ssh -i /caminho/minha-chave.pem" ./ ubuntu@<IP_PUBLICO_DA_EC2>:~/domino-online
+# Clonar o repositório
+git clone https://github.com/enthonyaraujo/aula4-distribuidos.git
+cd aula4-distribuidos
+
+# Construir a imagem Docker
+sudo docker build -t domino-online .
+
+# Executar o contêiner na porta 80
+sudo docker run -d -p 80:80 --name domino-game --restart always domino-online
 ```
+
+---
+
+### Opção B: Copiar os arquivos locais via SCP/Rsync
 
 Em seguida, na EC2:
 ```bash
